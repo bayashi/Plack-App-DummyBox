@@ -14,6 +14,7 @@ use Plack::Util::Accessor qw/
     dot_png
     font
     text
+    filter
     max_width
     max_height
     stderr
@@ -109,6 +110,10 @@ sub call {
                     aa => 1,
                 ) or return $self->return_status(500, Imager->errstr);
             }
+        }
+
+        if (ref($self->filter) eq 'CODE') {
+            $self->filter->($self, $img);
         }
 
         my $content = '';
@@ -221,6 +226,10 @@ size of border line(pixel): default 1
             color => 'red', # option
         },
         text   => "foo",
+        filter => sub {
+            my ($self, $img) = @_;
+            # .. do something ..
+        },
         stderr => 1,
     )->to_app;
 
@@ -237,6 +246,10 @@ If you want to see image size as text on the image, you should set C<font> optio
 =item text
 
 add a text in the image. C<text> option also requires C<font> option. Note that text string should be decoded utf8 text when it included not ascii strings.
+
+=item filter
+
+filter should code reference. This method receives the $self and Imager object.
 
 =item stderr
 
