@@ -28,7 +28,7 @@ note('1x1 images');
 
         is $res->code, 200, 'response status 200';
         is $res->content_type, 'image/gif', 'default content_type';
-        like $res->content, qr/GIF89a.+/, 'gif image';
+        like $res->content, qr/^GIF.+/, 'gif image';
         is(
             $res->content,
             MIME::Base64::decode_base64('R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='),
@@ -65,7 +65,7 @@ note('Imager images');
         is $res->code, 200, 'response status 200';
         is $res->content_type, 'image/gif', 'default content_type';
         is $res->content_length, 296, 'gif image content';
-        like $res->content, qr/GIF89a.+/, 'gif image';
+        like $res->content, qr/^GIF.+/, 'gif image';
 
         $img->read(data => $res->content);
         is $img->colorcount, 2, 'color count';
