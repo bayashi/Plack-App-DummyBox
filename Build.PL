@@ -9,6 +9,9 @@ my $builder = Module::Build->new(
     dist_version_from   => 'lib/Plack/App/DummyBox.pm',
     build_requires      => {
         'Test::More' => 0.88,
+        'Plack::Test' => 0,
+        'HTTP::Request::Common' => 0,
+        'MIME::Base64' => 0,
     },
     requires => {
         'perl' => '5.8.1',
