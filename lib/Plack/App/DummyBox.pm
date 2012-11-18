@@ -15,6 +15,8 @@ use Plack::Util::Accessor qw/
     font
     text
     filter
+    cache
+    cache_key
     max_width
     max_height
     stderr
@@ -80,6 +82,16 @@ sub call {
         my $line   = int($req->param('line') || 1); $line++;
         return $self->return_status(400) if $line > $w && $line > $h;
 
+        if ($self->cache) {
+            $self->cache_key(
+                join ':',
+                    $w, $h, $ext, $fill, $border, $line
+            );
+            if ( my $cache = $self->cache->get($self->cache_key) ) {
+                return [ 200, @{$cache} ];
+            }
+        }
+
         my $img = Imager->new(xsize => $w, ysize => $h);
         $img->box(
             filled => 1,
@@ -120,8 +132,8 @@ sub call {
         $img->write(data => \$content , type => $ext);
         my $disposition = $ext_obj->disposition. '; filename="'
                             . "${w}x$h\.$ext". '"';
-        return [
-            200,
+
+        my $response = [
             [
                 'Content-Type'   => $ext_obj->type,
                 'Content-Length' => length $content,
@@ -130,6 +142,11 @@ sub call {
             ],
             [$content]
         ];
+
+        if ($self->cache) {
+            $self->cache->set($self->cache_key => $response);
+        }
+        return [ 200, @{$response} ];
     }
 }
 
@@ -230,6 +247,7 @@ size of border line(pixel): default 1
             my ($self, $img) = @_;
             # .. do something ..
         },
+        cache => Cache::File->new(cache_root => '/tmp/cache'),
         stderr => 1,
     )->to_app;
 
@@ -250,6 +268,10 @@ add a text in the image. C<text> option also requires C<font> option. Note that 
 =item filter
 
 filter should code reference. This method receives the $self and Imager object.
+
+=item cache
+
+If you want to cache responses between requests, provide the C<cache> parameter with an object supporting the Cache API(e.g. Cache::File). Specifically, an object that supports $cache->get($key) and $cache->set($key, $value, $expires).
 
 =item stderr
 
