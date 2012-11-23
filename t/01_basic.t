@@ -19,6 +19,11 @@ note('methods');
 
 my $app = Plack::App::DummyBox->new->to_app;
 
+for my $type (qw/gif png/) {
+    diag("The Imager module in this system does NOT support: $type")
+        unless $Imager::formats{$type};
+}
+
 note('1x1 images');
 {
     test_psgi $app, sub {
