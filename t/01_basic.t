@@ -65,6 +65,7 @@ note('Imager images');
     test_psgi $app, sub {
         my $cb = shift;
 
+        # gif(default)
         my $res = $cb->(GET '/?w=99&h=99');
 
         is $res->code, 200, 'response status 200';
@@ -78,6 +79,19 @@ note('Imager images');
 
             $img->read(data => $res->content);
             is $img->colorcount, 2, 'color count';
+        }
+
+        # png
+        my $res = $cb->(GET '/?w=99&h=99&ext=png');
+
+        is $res->code, 200, 'response status 200';
+        is $res->content_type, 'image/png', 'png content_type';
+
+        SKIP: {
+            skip 'png is not supported', 2 unless $Imager::formats{png};
+
+            is $res->content_length, 304, 'png image content';
+            like $res->content, qr/^.+PNG.+/, 'png image';
         }
     };
 }
