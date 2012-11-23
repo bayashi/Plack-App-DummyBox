@@ -82,16 +82,16 @@ note('Imager images');
         }
 
         # png
-        my $res = $cb->(GET '/?w=99&h=99&ext=png');
+        my $res_png = $cb->(GET '/?w=99&h=99&ext=png');
 
-        is $res->code, 200, 'response status 200';
-        is $res->content_type, 'image/png', 'png content_type';
+        is $res_png->code, 200, 'response status 200';
+        is $res_png->content_type, 'image/png', 'png content_type';
 
         SKIP: {
             skip 'png is not supported', 2 unless $Imager::formats{png};
 
-            is $res->content_length, 304, 'png image content';
-            like $res->content, qr/^.+PNG.+/, 'png image';
+            is $res_png->content_length, 304, 'png image content';
+            like $res_png->content, qr/^.+PNG.+/, 'png image';
         }
     };
 }
