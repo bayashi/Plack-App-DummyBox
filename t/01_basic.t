@@ -64,11 +64,16 @@ note('Imager images');
 
         is $res->code, 200, 'response status 200';
         is $res->content_type, 'image/gif', 'default content_type';
-        is $res->content_length, 296, 'gif image content';
-        like $res->content, qr/^GIF.+/, 'gif image';
 
-        $img->read(data => $res->content);
-        is $img->colorcount, 2, 'color count';
+        SKIP: {
+            skip 'gif is not supported', 3 unless $Imager::formats{gif};
+
+            is $res->content_length, 296, 'gif image content';
+            like $res->content, qr/^GIF.+/, 'gif image';
+
+            $img->read(data => $res->content);
+            is $img->colorcount, 2, 'color count';
+        }
     };
 }
 
