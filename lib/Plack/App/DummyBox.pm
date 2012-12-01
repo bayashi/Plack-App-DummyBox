@@ -308,7 +308,7 @@ Dai Okabayashi E<lt>bayashi@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
-L<Plack::Component >, L<Image::Empty>, L<Imager>
+L<Plack::Component>, L<Image::Empty>, L<Imager>
 
 
 =head1 LICENSE
