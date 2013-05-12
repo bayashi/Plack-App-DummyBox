@@ -5,7 +5,7 @@ This is Perl module B<Plack::App::DummyBox>.
 
 =begin html
 
-<a href="http://travis-ci.org/bayashi/Plack-App-DummyBox"><img src="https://secure.travis-ci.org/bayashi/Plack-App-DummyBox.png"/></a>
+<a href="http://travis-ci.org/bayashi/Plack-App-DummyBox"><img src="https://secure.travis-ci.org/bayashi/Plack-App-DummyBox.png"/></a> <a href="https://coveralls.io/r/bayashi/Plack-App-DummyBox"><img src="https://coveralls.io/repos/bayashi/Plack-App-DummyBox/badge.png?branch=master"/></a>
 
 =end html
 
